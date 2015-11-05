@@ -1,7 +1,7 @@
 /*
      File: AppDelegate.m
  Abstract: The application delegate class
-  Version: 1.2
+  Version: 1.3
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
@@ -41,13 +41,11 @@
  STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  
- Copyright (C) 2008 Apple Inc. All Rights Reserved.
+ Copyright (C) 2009 Apple Inc. All Rights Reserved.
  
  */
 
 #import "AppDelegate.h"
-#import "MyViewController.h"
-
 
 NSString *kFirstNameKey			= @"firstNameKey";
 NSString *kLastNameKey			= @"lastNameKey";
@@ -57,20 +55,14 @@ NSString *kBackgroundColorKey	= @"backgroundColorKey";
 
 @implementation AppDelegate
 
-@synthesize window;
-@synthesize firstName;
-@synthesize lastName;
-@synthesize backgroundColor;
-@synthesize textColor;
+@synthesize window, navigationController, firstName, lastName, backgroundColor, textColor;
 
 - (void)dealloc
 {
 	[navigationController release];
-    [myViewController release];
-	[window release];
 	[firstName release];
 	[lastName release];
-	
+	[window release];
     [super dealloc];
 }
 
@@ -119,14 +111,13 @@ NSString *kBackgroundColorKey	= @"backgroundColorKey";
 			}
 		}
 
-		// since no default values have been set (i.e. no preferences file created), create it here
-		NSDictionary *appDefaults =  [NSDictionary dictionaryWithObjectsAndKeys:
-									  firstNameDefault, kFirstNameKey,
-									  lastNameDefault, kLastNameKey,
-									  [NSNumber numberWithInt:1], kNameColorKey,
-									  [NSNumber numberWithInt:1], kBackgroundColorKey,
+		// since no default values have been set (i.e. no preferences file created), create it here		
+		NSDictionary *appDefaults = [NSDictionary dictionaryWithObjectsAndKeys:
+										firstNameDefault, kFirstNameKey,
+										lastNameDefault, kLastNameKey,
+										nameColorDefault, kNameColorKey,
+										backgroundColorDefault, kBackgroundColorKey,
 									  nil];
-		
 		[[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 	}

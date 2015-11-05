@@ -1,7 +1,7 @@
 /*
      File: AppDelegate.h
  Abstract: The application delegate class
-  Version: 1.2
+  Version: 1.3
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
@@ -41,11 +41,9 @@
  STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  
- Copyright (C) 2008 Apple Inc. All Rights Reserved.
+ Copyright (C) 2009 Apple Inc. All Rights Reserved.
  
  */
-
-#import <UIKit/UIKit.h>
 
 enum textColors
 {
@@ -64,9 +62,8 @@ enum backgroundColors
 
 @interface AppDelegate : NSObject <UIApplicationDelegate>
 {
-    IBOutlet UIWindow				*window;
-	IBOutlet UINavigationController	*navigationController;
-	IBOutlet UIViewController		*myViewController;
+	UIWindow				*window;
+	UINavigationController	*navigationController;
 
 	NSString	*firstName;
 	NSString	*lastName;
@@ -74,7 +71,9 @@ enum backgroundColors
 	NSInteger	textColor;
 }
 
-@property (nonatomic, retain) UIWindow *window;
+@property (nonatomic, retain) IBOutlet UIWindow *window;
+@property (nonatomic, retain) IBOutlet UINavigationController *navigationController;
+
 @property (nonatomic, retain) NSString *firstName;
 @property (nonatomic, retain) NSString *lastName;
 @property (nonatomic, assign) NSInteger backgroundColor;

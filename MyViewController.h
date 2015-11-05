@@ -1,7 +1,7 @@
 /*
      File: MyViewController.h
- Abstract: The main view controller of this app
-  Version: 1.2
+ Abstract: The main table view controller of this app.
+  Version: 1.3
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
@@ -41,32 +41,21 @@
  STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  
- Copyright (C) 2008 Apple Inc. All Rights Reserved.
+ Copyright (C) 2009 Apple Inc. All Rights Reserved.
  
  */
 
-#import <UIKit/UIKit.h>
-
-@interface MyViewController : UIViewController <UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface MyViewController : UITableViewController
 {
-	UIView			*containerView;
-	
-	UITableView		*myTableView;
-	IBOutlet UIView	*instructionsView;
-	
-	NSString		*firstNameStr;
-	NSString		*lastNameStr;
-	
-	UIBarButtonItem *flipButton;
+	UIView *instructionsView;	
 	UIBarButtonItem *doneButton;
+	UIBarButtonItem *flipButton;
 }
 
-@property (nonatomic, retain) UIView *containerView;
-@property (nonatomic, retain) UITableView *myTableView;
-@property (nonatomic, retain) UIView *instructionsView;
-@property (nonatomic, retain) NSString *firstNameStr;
-@property (nonatomic, retain) NSString *lastNameStr;
+@property (nonatomic, retain) IBOutlet UIView *instructionsView;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *doneButton;
 @property (nonatomic, retain) UIBarButtonItem *flipButton;
-@property (nonatomic, retain) UIBarButtonItem *doneButton;
+
+- (void)flipAction:(id)sender;
 
 @end
