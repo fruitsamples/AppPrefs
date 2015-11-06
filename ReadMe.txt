@@ -8,13 +8,15 @@ It then saves any configured values in the defaults database so that your applic
 This sample offers an Xcode project already pre-configured to build your Settings bundle as a target.
 To customize your settings UI, change the Root.plist file.
 
+This sample also shows how to dynamically update it's UI when its settings are changed while the app is in the background via "NSUserDefaultsDidChangeNotification".
+
 
 Build Requirements
-iPhone OS 3.0.
+iOS 4.0 SDK
 
 
 Runtime Requirements
-iPhone OS 3.0.
+iPhone OS 3.2 or later.
 
 
 Using the Sample
@@ -42,8 +44,17 @@ For more information on extending the Settings application, refer to the "iPhone
 
 Changes from Previous Versions
 1.0 - First release
-1.1 - Updated for and tested with iPhone OS 2.0. First public release.
-1.2 - Updated Read Me
-1.3 - More use of nibs, upgraded for 3.0 SDK due to deprecated APIs; in "cellForRowAtIndexPath" it now uses UITableViewCell's initWithStyle.  Settings.bundle no longer builds as a separate Xcode target.
 
-Copyright (C) 2008-2009 Apple Inc. All rights reserved.
+1.1 - Updated for and tested with iPhone OS 2.0. First public release.
+
+1.2 - Updated Read Me
+
+1.3 - More use of nibs, upgraded for 3.0 SDK due to deprecated APIs;
+in "cellForRowAtIndexPath" it now uses UITableViewCell's initWithStyle;
+Settings.bundle no longer builds as a separate Xcode target.
+
+1.4 - Upgraded project to build with the iOS 4 SDK, fixed static analyzer warning. added support for "NSUserDefaultsDidChangeNotification".
+
+1.5 - Deployment target set to iPhone OS 3.2.
+
+Copyright (C) 2008-2010 Apple Inc. All rights reserved.

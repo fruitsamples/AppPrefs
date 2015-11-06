@@ -1,7 +1,7 @@
 /*
      File: AppDelegate.m
  Abstract: The application delegate class
-  Version: 1.3
+  Version: 1.5
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
@@ -41,7 +41,7 @@
  STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  
- Copyright (C) 2009 Apple Inc. All Rights Reserved.
+ Copyright (C) 2010 Apple Inc. All Rights Reserved.
  
  */
 
@@ -59,18 +59,21 @@ NSString *kBackgroundColorKey	= @"backgroundColorKey";
 
 - (void)dealloc
 {
-	[navigationController release];
+	[[NSNotificationCenter defaultCenter] removeObserver:self
+                                           name:NSUserDefaultsDidChangeNotification
+                                         object:nil];
+
+    [navigationController release];
 	[firstName release];
 	[lastName release];
 	[window release];
+    
     [super dealloc];
 }
 
-- (void)applicationDidFinishLaunching:(UIApplication *)application
+- (void)setupByPreferences
 {
-	[window addSubview:[navigationController view]];
-	
-	NSString *testValue = [[NSUserDefaults standardUserDefaults] stringForKey:kFirstNameKey];
+    NSString *testValue = [[NSUserDefaults standardUserDefaults] stringForKey:kFirstNameKey];
 	if (testValue == nil)
 	{
 		// no default values have been set, create them here based on what's in our Settings bundle info
@@ -78,14 +81,14 @@ NSString *kBackgroundColorKey	= @"backgroundColorKey";
 		NSString *pathStr = [[NSBundle mainBundle] bundlePath];
 		NSString *settingsBundlePath = [pathStr stringByAppendingPathComponent:@"Settings.bundle"];
 		NSString *finalPath = [settingsBundlePath stringByAppendingPathComponent:@"Root.plist"];
-
+        
 		NSDictionary *settingsDict = [NSDictionary dictionaryWithContentsOfFile:finalPath];
 		NSArray *prefSpecifierArray = [settingsDict objectForKey:@"PreferenceSpecifiers"];
-
-		NSString *firstNameDefault;
-		NSString *lastNameDefault;
-		NSNumber *nameColorDefault;
-		NSNumber *backgroundColorDefault;
+        
+		NSString *firstNameDefault = nil;
+		NSString *lastNameDefault = nil;
+		NSNumber *nameColorDefault = nil;
+		NSNumber *backgroundColorDefault = nil;
 		
 		NSDictionary *prefItem;
 		for (prefItem in prefSpecifierArray)
@@ -110,23 +113,49 @@ NSString *kBackgroundColorKey	= @"backgroundColorKey";
 				backgroundColorDefault = defaultValue;
 			}
 		}
-
+        
 		// since no default values have been set (i.e. no preferences file created), create it here		
 		NSDictionary *appDefaults = [NSDictionary dictionaryWithObjectsAndKeys:
-										firstNameDefault, kFirstNameKey,
-										lastNameDefault, kLastNameKey,
-										nameColorDefault, kNameColorKey,
-										backgroundColorDefault, kBackgroundColorKey,
-									  nil];
+                                     firstNameDefault, kFirstNameKey,
+                                     lastNameDefault, kLastNameKey,
+                                     nameColorDefault, kNameColorKey,
+                                     backgroundColorDefault, kBackgroundColorKey,
+                                     nil];
+        
 		[[NSUserDefaults standardUserDefaults] registerDefaults:appDefaults];
 		[[NSUserDefaults standardUserDefaults] synchronize];
 	}
 	
-	// we're ready to do, so lastly set the key preference values
+	// we're ready to go, so lastly set the key preference values
 	firstName = [[NSUserDefaults standardUserDefaults] stringForKey:kFirstNameKey];
 	lastName = [[NSUserDefaults standardUserDefaults] stringForKey:kLastNameKey];
 	textColor = [[NSUserDefaults standardUserDefaults] integerForKey:kNameColorKey];
 	backgroundColor = [[NSUserDefaults standardUserDefaults] integerForKey:kBackgroundColorKey];
+}
+
+// we are being notified that our preferences have changed (user changed them in the Settings app)
+// so read in the changes and update our UI.
+//
+- (void)defaultsChanged:(NSNotification *)notif
+{
+    [self setupByPreferences];
+    UITableView *tableView = ((UITableViewController *)self.navigationController.visibleViewController).tableView;
+    [tableView reloadData];
+}
+
+- (void)applicationDidFinishLaunching:(UIApplication *)application
+{
+    [window addSubview:[navigationController view]];
+    
+    // listen for changes to our preferences when the Settings app does so,
+    // when we are resumed from the backround, this will give us a chance to update our UI
+    //
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                       selector:@selector(defaultsChanged:)
+                                           name:NSUserDefaultsDidChangeNotification
+                                         object:nil];
+
+	[self setupByPreferences];
 }
 
 @end
